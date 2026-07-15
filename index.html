@@ -1,151 +1,172 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#111827" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f6fb">
   <title>Category Bingo</title>
   <style>
     :root {
-      --bg: #f4f7fb;
-      --card: #ffffff;
-      --text: #172033;
-      --muted: #667085;
-      --accent: #6d5dfc;
-      --accent-dark: #5142dc;
-      --marked: #dff8e8;
-      --marked-border: #2f9e5b;
-      --shadow: 0 12px 32px rgba(24, 35, 58, 0.12);
+      --bg: #f5f6fb;
+      --panel: #ffffff;
+      --ink: #172033;
+      --muted: #6b7280;
+      --line: #dde2ec;
+      --accent: #6757f5;
+      --accent-soft: #eeecff;
+      --good: #16834a;
+      --good-soft: #dff7e9;
+      --bad: #c53a3a;
+      --bad-soft: #ffe4e4;
+      --gold: #d19c20;
+      --gold-soft: #fff2c8;
+      --shadow: 0 18px 50px rgba(28, 36, 58, 0.11);
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: var(--bg);
+    }
 
     body {
       margin: 0;
-      min-height: 100vh;
+      min-height: 100svh;
+      color: var(--ink);
       background:
-        radial-gradient(circle at top, rgba(109,93,252,.15), transparent 34rem),
+        radial-gradient(circle at 50% -80px, #e8e6ff 0, transparent 420px),
         var(--bg);
-      color: var(--text);
-      font-family: Inter, ui-rounded, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: ui-rounded, "SF Pro Rounded", "Arial Rounded MT Bold",
+        system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
 
-    .app {
-      width: min(100%, 620px);
-      margin: 0 auto;
-      padding: max(18px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom));
+    button {
+      font: inherit;
     }
 
-    header {
+    .app {
+      width: min(100%, 560px);
+      margin: 0 auto;
+      padding:
+        max(16px, env(safe-area-inset-top))
+        12px
+        calc(110px + env(safe-area-inset-bottom));
+    }
+
+    .heading {
       text-align: center;
-      margin-bottom: 18px;
+      margin: 4px 0 14px;
     }
 
     h1 {
-      margin: 4px 0 6px;
-      font-size: clamp(2rem, 9vw, 3.2rem);
-      line-height: 1;
-      letter-spacing: -0.05em;
+      margin: 0;
+      font-size: clamp(2rem, 10vw, 3rem);
+      line-height: .95;
+      letter-spacing: -.055em;
     }
 
-    .subtitle {
-      margin: 0;
+    .tagline {
+      margin: 8px auto 0;
+      max-width: 340px;
       color: var(--muted);
-      font-size: 0.98rem;
+      font-size: .93rem;
+      line-height: 1.3;
+      font-weight: 650;
     }
 
     .panel {
-      background: rgba(255,255,255,.94);
-      border: 1px solid rgba(255,255,255,.9);
+      background: rgba(255, 255, 255, .96);
+      border: 1px solid rgba(255, 255, 255, .9);
       border-radius: 24px;
       box-shadow: var(--shadow);
-      padding: 16px;
-      backdrop-filter: blur(16px);
+      padding: 12px;
     }
 
-    .theme-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
+    .themes {
+      display: flex;
+      gap: 7px;
+      overflow-x: auto;
+      padding: 2px 1px 8px;
+      scrollbar-width: none;
+      scroll-snap-type: x proximity;
     }
 
-    .theme-btn {
-      appearance: none;
+    .themes::-webkit-scrollbar {
+      display: none;
+    }
+
+    .theme {
+      flex: 0 0 auto;
+      min-width: 94px;
       border: 2px solid transparent;
-      border-radius: 16px;
-      background: #f2f4f8;
-      color: var(--text);
-      padding: 13px 10px;
-      font: inherit;
-      font-weight: 800;
+      border-radius: 13px;
+      padding: 10px 12px;
+      background: #f0f2f7;
+      color: var(--ink);
+      font-size: .83rem;
+      font-weight: 850;
       cursor: pointer;
-      transition: transform .15s ease, border-color .15s ease, background .15s ease;
+      scroll-snap-align: start;
     }
 
-    .theme-btn:last-child:nth-child(odd) {
-      grid-column: 1 / -1;
-    }
-
-    .theme-btn:active { transform: scale(.97); }
-
-    .theme-btn.active {
-      background: #eeebff;
+    .theme.active {
       border-color: var(--accent);
-      color: var(--accent-dark);
+      background: var(--accent-soft);
+      color: #5143d4;
     }
 
-    .status {
-      display: grid;
-      gap: 10px;
-      margin: 16px 0;
-    }
-
-    .clue-card {
-      min-height: 108px;
-      border-radius: 20px;
-      background: linear-gradient(135deg, #1f2937, #111827);
+    .clue {
+      margin-top: 4px;
+      min-height: 112px;
+      border-radius: 19px;
+      background: linear-gradient(145deg, #202a3c, #111827);
       color: white;
+      padding: 16px;
       display: grid;
       place-items: center;
       text-align: center;
-      padding: 18px;
     }
 
     .clue-label {
+      margin-bottom: 7px;
+      color: rgba(255,255,255,.62);
       text-transform: uppercase;
       letter-spacing: .16em;
-      font-size: .72rem;
-      opacity: .65;
-      margin-bottom: 8px;
+      font-size: .67rem;
+      font-weight: 800;
     }
 
     #clueText {
-      font-size: clamp(1.35rem, 6vw, 2rem);
+      font-size: clamp(1.35rem, 6.6vw, 2rem);
+      line-height: 1.08;
       font-weight: 900;
-      line-height: 1.12;
     }
 
-    .hint {
+    #feedback {
+      min-height: 20px;
       margin-top: 8px;
-      font-size: .88rem;
-      opacity: .7;
+      font-size: .82rem;
+      font-weight: 800;
+      color: rgba(255,255,255,.72);
     }
 
     .controls {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 8px;
+      margin-top: 9px;
     }
 
-    button.action {
-      appearance: none;
+    .action {
       border: 0;
-      border-radius: 16px;
-      padding: 14px 12px;
-      font: inherit;
-      font-weight: 900;
+      border-radius: 14px;
+      padding: 13px 10px;
       cursor: pointer;
+      font-weight: 900;
+      font-size: .96rem;
     }
 
     .primary {
@@ -155,232 +176,358 @@
 
     .secondary {
       background: #e9edf5;
-      color: var(--text);
+      color: var(--ink);
     }
 
-    .bingo-card {
+    .board {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 6px;
-      margin-top: 16px;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 5px;
+      margin-top: 11px;
     }
 
-    .square {
-      aspect-ratio: 1;
-      border: 2px solid #e5e9f2;
-      border-radius: 14px;
-      background: var(--card);
-      color: var(--text);
-      padding: 5px;
+    .cell {
+      position: relative;
+      min-width: 0;
+      height: clamp(58px, 17vw, 74px);
+      border: 2px solid var(--line);
+      border-radius: 12px;
+      padding: 4px 3px;
+      background: white;
+      color: var(--ink);
       display: grid;
       place-items: center;
       text-align: center;
-      font-size: clamp(.66rem, 2.8vw, .92rem);
+      font-size: clamp(.61rem, 2.6vw, .82rem);
+      line-height: 1.02;
       font-weight: 850;
-      line-height: 1.05;
-      cursor: pointer;
-      user-select: none;
+      overflow: hidden;
       overflow-wrap: anywhere;
-      transition: transform .12s ease, background .15s ease, border-color .15s ease;
+      hyphens: auto;
+      cursor: pointer;
+      transition: transform .1s ease, background .15s ease, border-color .15s ease;
     }
 
-    .square:active { transform: scale(.94); }
-
-    .square.marked {
-      background: var(--marked);
-      border-color: var(--marked-border);
-      color: #17653a;
+    .cell:active {
+      transform: scale(.95);
     }
 
-    .square.free {
-      background: #fff4ce;
-      border-color: #e6b73f;
-      color: #7a5600;
+    .cell.marked {
+      background: var(--good-soft);
+      border-color: var(--good);
+      color: #12653b;
     }
 
-    .message {
-      min-height: 30px;
-      text-align: center;
-      font-weight: 900;
-      color: var(--accent-dark);
-      margin-top: 12px;
+    .cell.free {
+      background: var(--gold-soft);
+      border-color: var(--gold);
+      color: #785608;
     }
 
-    .instructions {
+    .cell.wrong {
+      background: var(--bad-soft);
+      border-color: var(--bad);
+      color: #8e2424;
+      animation: shake .23s linear 2;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      40% { transform: translateX(-3px); }
+      70% { transform: translateX(3px); }
+    }
+
+    .footer-note {
+      margin: 11px 6px 2px;
       color: var(--muted);
-      font-size: .9rem;
       text-align: center;
-      margin: 14px 8px 0;
-      line-height: 1.45;
+      font-size: .78rem;
+      line-height: 1.35;
+    }
+
+    .win {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: none;
+      place-items: center;
+      padding: 24px;
+      background: rgba(15, 23, 42, .55);
+      backdrop-filter: blur(7px);
+    }
+
+    .win.show {
+      display: grid;
+    }
+
+    .win-card {
+      width: min(100%, 360px);
+      border-radius: 24px;
+      background: white;
+      padding: 28px 22px;
+      text-align: center;
+      box-shadow: 0 24px 80px rgba(0,0,0,.25);
+    }
+
+    .win-title {
+      font-size: 2.4rem;
+      line-height: 1;
+      font-weight: 950;
+      letter-spacing: -.05em;
+    }
+
+    .win-card p {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .win-card button {
+      width: 100%;
+      border: 0;
+      border-radius: 14px;
+      background: var(--accent);
+      color: white;
+      padding: 14px;
+      font-weight: 900;
     }
 
     @media (min-width: 520px) {
-      .theme-grid {
+      .app {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .themes {
+        display: grid;
         grid-template-columns: repeat(5, 1fr);
+        overflow: visible;
       }
-      .theme-btn:last-child:nth-child(odd) {
-        grid-column: auto;
+
+      .theme {
+        min-width: 0;
+        padding-left: 7px;
+        padding-right: 7px;
       }
-      .square {
-        border-radius: 18px;
-        font-size: .92rem;
+
+      .panel {
+        padding: 16px;
+      }
+    }
+
+    @media (max-width: 370px) {
+      .cell {
+        font-size: .58rem;
+        border-radius: 10px;
       }
     }
   </style>
 </head>
 <body>
   <main class="app">
-    <header>
+    <header class="heading">
       <h1>Category Bingo</h1>
-      <p class="subtitle">Pick a theme, call a clue, then mark the matching category.</p>
+      <p class="tagline">Choose a theme. Read the clue. Tap the category that fits.</p>
     </header>
 
     <section class="panel">
-      <div class="theme-grid" id="themeGrid"></div>
+      <div class="themes" id="themes"></div>
 
-      <div class="status">
-        <div class="clue-card">
-          <div>
-            <div class="clue-label">Current clue</div>
-            <div id="clueText">Choose a theme to start</div>
-            <div class="hint" id="hintText">Get five in a row to win.</div>
-          </div>
-        </div>
-
-        <div class="controls">
-          <button class="action primary" id="nextClueBtn">Next Clue</button>
-          <button class="action secondary" id="newCardBtn">New Card</button>
+      <div class="clue">
+        <div>
+          <div class="clue-label">Current clue</div>
+          <div id="clueText">Tap Next Clue to begin</div>
+          <div id="feedback">Get five in a row to win.</div>
         </div>
       </div>
 
-      <div class="bingo-card" id="bingoCard"></div>
-      <div class="message" id="message"></div>
+      <div class="controls">
+        <button class="action primary" id="nextBtn">Next Clue</button>
+        <button class="action secondary" id="newBtn">New Card</button>
+      </div>
 
-      <p class="instructions">
-        Tap a square when the clue belongs to that category. The center square is free.
-        A clue may fit more than one square, so choose carefully.
+      <div class="board" id="board"></div>
+
+      <p class="footer-note">
+        Correct answers turn green. Wrong answers flash red. Some clues can fit more than one idea, but the game uses the best match.
       </p>
     </section>
   </main>
 
+  <div class="win" id="win">
+    <div class="win-card">
+      <div class="win-title">BINGO!</div>
+      <p>You got five in a row.</p>
+      <button id="playAgainBtn">Play Again</button>
+    </div>
+  </div>
+
   <script>
-    const themes = {
+    const DATA = {
       animals: {
-        label: "ð¾ Animals",
-        categories: [
-          "Dog", "Cat", "Bird", "Fish", "Reptile", "Mammal", "Insect", "Farm Animal",
-          "Ocean Animal", "Jungle Animal", "Pet", "Wild Animal", "Flies", "Swims",
-          "Has Fur", "Lays Eggs", "Nocturnal", "Herbivore", "Carnivore", "Tiny Animal",
-          "Large Animal", "Striped", "Spotted", "Has a Shell"
-        ],
-        clues: [
-          ["Golden retriever", "Dog"], ["Siamese", "Cat"], ["Penguin", "Bird"],
-          ["Salmon", "Fish"], ["Iguana", "Reptile"], ["Dolphin", "Mammal"],
-          ["Butterfly", "Insect"], ["Cow", "Farm Animal"], ["Shark", "Ocean Animal"],
-          ["Tiger", "Jungle Animal"], ["Hamster", "Pet"], ["Wolf", "Wild Animal"],
-          ["Eagle", "Flies"], ["Seal", "Swims"], ["Rabbit", "Has Fur"],
-          ["Turtle", "Lays Eggs"], ["Owl", "Nocturnal"], ["Giraffe", "Herbivore"],
-          ["Lion", "Carnivore"], ["Ant", "Tiny Animal"], ["Elephant", "Large Animal"],
-          ["Zebra", "Striped"], ["Leopard", "Spotted"], ["Snail", "Has a Shell"]
+        label: "Animals",
+        items: [
+          ["Dog", "Golden retriever"],
+          ["Cat", "Siamese"],
+          ["Bird", "Penguin"],
+          ["Fish", "Salmon"],
+          ["Reptile", "Iguana"],
+          ["Mammal", "Dolphin"],
+          ["Insect", "Butterfly"],
+          ["Farm animal", "Cow"],
+          ["Ocean animal", "Shark"],
+          ["Jungle animal", "Tiger"],
+          ["Pet", "Hamster"],
+          ["Wild animal", "Wolf"],
+          ["Flies", "Eagle"],
+          ["Swims", "Seal"],
+          ["Has fur", "Rabbit"],
+          ["Lays eggs", "Turtle"],
+          ["Nocturnal", "Owl"],
+          ["Herbivore", "Giraffe"],
+          ["Carnivore", "Lion"],
+          ["Tiny animal", "Ant"],
+          ["Large animal", "Elephant"],
+          ["Striped", "Zebra"],
+          ["Spotted", "Leopard"],
+          ["Has a shell", "Snail"]
         ]
       },
       accounting: {
-        label: "ðµ Accounting",
-        categories: [
-          "Debit", "Credit", "Asset", "Liability", "Revenue", "Expense", "Equity",
-          "Cash", "Accounts Receivable", "Accounts Payable", "Inventory", "Payroll",
-          "Loan", "Sales", "Rent", "Equipment", "Owner Investment", "Tax",
-          "Depreciation", "Profit", "Loss", "Invoice", "Bank", "Journal Entry"
-        ],
-        clues: [
-          ["Cash increases", "Debit"], ["Revenue increases", "Credit"],
-          ["Something the company owns", "Asset"], ["Money the company owes", "Liability"],
-          ["Money earned from customers", "Revenue"], ["Cost of running the business", "Expense"],
-          ["Owner's share of the business", "Equity"], ["Money in checking", "Cash"],
-          ["Customer owes us", "Accounts Receivable"], ["We owe a supplier", "Accounts Payable"],
-          ["Products waiting to be sold", "Inventory"], ["Employee wages", "Payroll"],
-          ["Borrowed money", "Loan"], ["Customer purchase", "Sales"], ["Office lease payment", "Rent"],
-          ["Computer purchased for work", "Equipment"], ["Founder adds money", "Owner Investment"],
-          ["Government payment", "Tax"], ["Asset value falls over time", "Depreciation"],
-          ["Revenue exceeds expenses", "Profit"], ["Expenses exceed revenue", "Loss"],
-          ["Bill sent to a customer", "Invoice"], ["Where cash is deposited", "Bank"],
-          ["Record of a transaction", "Journal Entry"]
+        label: "Accounting",
+        items: [
+          ["Debit", "Cash increases"],
+          ["Credit", "Revenue increases"],
+          ["Asset", "Something the company owns"],
+          ["Liability", "Money the company owes"],
+          ["Revenue", "Money earned from customers"],
+          ["Expense", "Cost of running the business"],
+          ["Equity", "Owner's share of the business"],
+          ["Cash", "Money in checking"],
+          ["Receivable", "A customer owes us"],
+          ["Payable", "We owe a supplier"],
+          ["Inventory", "Products waiting to be sold"],
+          ["Payroll", "Employee wages"],
+          ["Loan", "Borrowed money"],
+          ["Sales", "A customer purchase"],
+          ["Rent", "Office lease payment"],
+          ["Equipment", "A computer bought for work"],
+          ["Investment", "The founder adds money"],
+          ["Tax", "Payment to the government"],
+          ["Depreciation", "An asset loses value over time"],
+          ["Profit", "Revenue is greater than expenses"],
+          ["Loss", "Expenses are greater than revenue"],
+          ["Invoice", "A bill sent to a customer"],
+          ["Bank", "Where company cash is deposited"],
+          ["Journal entry", "A record of a transaction"]
         ]
       },
       museum: {
-        label: "ðï¸ Museum",
-        categories: [
-          "Painting", "Sculpture", "Dinosaur", "Fossil", "Ancient Egypt", "Space",
-          "Mineral", "Ocean", "Mammal", "Bird", "Insect", "History", "Technology",
-          "Archaeology", "Photography", "Modern Art", "Weapon", "Clothing",
-          "Music", "Map", "Coin", "Pottery", "Skeleton", "Gemstone"
-        ],
-        clues: [
-          ["Mona Lisa", "Painting"], ["Marble statue", "Sculpture"], ["Tyrannosaurus rex", "Dinosaur"],
-          ["Trilobite", "Fossil"], ["Mummy", "Ancient Egypt"], ["Moon rock", "Space"],
-          ["Quartz", "Mineral"], ["Coral reef exhibit", "Ocean"], ["Whale model", "Mammal"],
-          ["Eagle specimen", "Bird"], ["Butterfly collection", "Insect"], ["Civil War display", "History"],
-          ["Early computer", "Technology"], ["Excavated temple tools", "Archaeology"],
-          ["Black-and-white portrait", "Photography"], ["Abstract canvas", "Modern Art"],
-          ["Medieval sword", "Weapon"], ["Victorian dress", "Clothing"],
-          ["Antique violin", "Music"], ["Old world atlas", "Map"], ["Roman money", "Coin"],
-          ["Greek vase", "Pottery"], ["Human bones", "Skeleton"], ["Ruby", "Gemstone"]
+        label: "Museum",
+        items: [
+          ["Painting", "Mona Lisa"],
+          ["Sculpture", "A marble statue"],
+          ["Dinosaur", "Tyrannosaurus rex"],
+          ["Fossil", "Trilobite"],
+          ["Ancient Egypt", "A mummy"],
+          ["Space", "A moon rock"],
+          ["Mineral", "Quartz"],
+          ["Ocean", "A coral reef exhibit"],
+          ["Mammal", "A whale model"],
+          ["Bird", "An eagle specimen"],
+          ["Insect", "A butterfly collection"],
+          ["History", "A Civil War display"],
+          ["Technology", "An early computer"],
+          ["Archaeology", "Tools from an excavated temple"],
+          ["Photography", "A black and white portrait"],
+          ["Modern art", "An abstract canvas"],
+          ["Weapon", "A medieval sword"],
+          ["Clothing", "A Victorian dress"],
+          ["Music", "An antique violin"],
+          ["Map", "An old world atlas"],
+          ["Coin", "Roman money"],
+          ["Pottery", "A Greek vase"],
+          ["Skeleton", "Human bones"],
+          ["Gemstone", "A ruby"]
         ]
       },
       food: {
-        label: "ð Food",
-        categories: [
-          "Fruit", "Vegetable", "Dessert", "Drink", "Breakfast", "Snack", "Spicy",
-          "Sweet", "Sour", "Salty", "Crunchy", "Soft", "Frozen", "Baked", "Grilled",
-          "Dairy", "Meat", "Seafood", "Grain", "Italian", "Mexican", "Asian",
-          "Healthy", "Fast Food"
-        ],
-        clues: [
-          ["Apple", "Fruit"], ["Carrot", "Vegetable"], ["Chocolate cake", "Dessert"],
-          ["Lemonade", "Drink"], ["Pancakes", "Breakfast"], ["Pretzels", "Snack"],
-          ["JalapeÃ±o", "Spicy"], ["Honey", "Sweet"], ["Lemon", "Sour"],
-          ["Potato chips", "Salty"], ["Popcorn", "Crunchy"], ["Mashed potatoes", "Soft"],
-          ["Ice cream", "Frozen"], ["Bread", "Baked"], ["Hamburger patty", "Grilled"],
-          ["Cheese", "Dairy"], ["Chicken", "Meat"], ["Shrimp", "Seafood"],
-          ["Rice", "Grain"], ["Lasagna", "Italian"], ["Taco", "Mexican"],
-          ["Sushi", "Asian"], ["Salad", "Healthy"], ["French fries", "Fast Food"]
+        label: "Food",
+        items: [
+          ["Fruit", "Apple"],
+          ["Vegetable", "Carrot"],
+          ["Dessert", "Chocolate cake"],
+          ["Drink", "Lemonade"],
+          ["Breakfast", "Pancakes"],
+          ["Snack", "Pretzels"],
+          ["Spicy", "Jalapeno"],
+          ["Sweet", "Honey"],
+          ["Sour", "Lemon"],
+          ["Salty", "Potato chips"],
+          ["Crunchy", "Popcorn"],
+          ["Soft", "Mashed potatoes"],
+          ["Frozen", "Ice cream"],
+          ["Baked", "Bread"],
+          ["Grilled", "A hamburger patty"],
+          ["Dairy", "Cheese"],
+          ["Meat", "Chicken"],
+          ["Seafood", "Shrimp"],
+          ["Grain", "Rice"],
+          ["Italian", "Lasagna"],
+          ["Mexican", "Taco"],
+          ["Asian", "Sushi"],
+          ["Healthy", "Salad"],
+          ["Fast food", "French fries"]
         ]
       },
       mixed: {
-        label: "ð² Mixed",
-        categories: [
-          "Animal", "Food", "Place", "Object", "Color", "Emotion", "Job", "Sport",
-          "Vehicle", "Weather", "Music", "Science", "History", "Movie", "Book",
-          "Technology", "Nature", "Clothing", "Tool", "School", "Holiday",
-          "Game", "Body Part", "Building"
-        ],
-        clues: [
-          ["Elephant", "Animal"], ["Pizza", "Food"], ["Paris", "Place"], ["Lamp", "Object"],
-          ["Purple", "Color"], ["Excited", "Emotion"], ["Doctor", "Job"], ["Basketball", "Sport"],
-          ["Airplane", "Vehicle"], ["Thunderstorm", "Weather"], ["Guitar", "Music"],
-          ["Gravity", "Science"], ["Roman Empire", "History"], ["Toy Story", "Movie"],
-          ["Charlotte's Web", "Book"], ["Smartphone", "Technology"], ["Waterfall", "Nature"],
-          ["Jacket", "Clothing"], ["Hammer", "Tool"], ["Homework", "School"],
-          ["Halloween", "Holiday"], ["Chess", "Game"], ["Elbow", "Body Part"],
-          ["Library", "Building"]
+        label: "Mixed",
+        items: [
+          ["Animal", "Elephant"],
+          ["Food", "Pizza"],
+          ["Place", "Paris"],
+          ["Object", "Lamp"],
+          ["Color", "Purple"],
+          ["Emotion", "Excited"],
+          ["Job", "Doctor"],
+          ["Sport", "Basketball"],
+          ["Vehicle", "Airplane"],
+          ["Weather", "Thunderstorm"],
+          ["Music", "Guitar"],
+          ["Science", "Gravity"],
+          ["History", "Roman Empire"],
+          ["Movie", "Toy Story"],
+          ["Book", "Charlotte's Web"],
+          ["Technology", "Smartphone"],
+          ["Nature", "Waterfall"],
+          ["Clothing", "Jacket"],
+          ["Tool", "Hammer"],
+          ["School", "Homework"],
+          ["Holiday", "Halloween"],
+          ["Game", "Chess"],
+          ["Body part", "Elbow"],
+          ["Building", "Library"]
         ]
       }
     };
 
-    const themeGrid = document.getElementById("themeGrid");
-    const bingoCard = document.getElementById("bingoCard");
-    const clueText = document.getElementById("clueText");
-    const hintText = document.getElementById("hintText");
-    const message = document.getElementById("message");
-    const nextClueBtn = document.getElementById("nextClueBtn");
-    const newCardBtn = document.getElementById("newCardBtn");
+    const themesEl = document.getElementById("themes");
+    const boardEl = document.getElementById("board");
+    const clueTextEl = document.getElementById("clueText");
+    const feedbackEl = document.getElementById("feedback");
+    const nextBtn = document.getElementById("nextBtn");
+    const newBtn = document.getElementById("newBtn");
+    const winEl = document.getElementById("win");
+    const playAgainBtn = document.getElementById("playAgainBtn");
 
-    let activeThemeKey = "animals";
+    let themeKey = "animals";
     let board = [];
-    let clueDeck = [];
+    let deck = [];
+    let currentAnswer = null;
+    let currentClue = null;
+    let acceptingAnswer = false;
 
-    function shuffle(items) {
-      const copy = [...items];
+    function shuffle(list) {
+      const copy = [...list];
       for (let i = copy.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [copy[i], copy[j]] = [copy[j], copy[i]];
@@ -388,63 +535,106 @@
       return copy;
     }
 
-    function renderThemeButtons() {
-      themeGrid.innerHTML = "";
-      Object.entries(themes).forEach(([key, theme]) => {
-        const btn = document.createElement("button");
-        btn.className = "theme-btn" + (key === activeThemeKey ? " active" : "");
-        btn.textContent = theme.label;
-        btn.addEventListener("click", () => {
-          activeThemeKey = key;
-          renderThemeButtons();
-          startNewCard();
+    function renderThemes() {
+      themesEl.innerHTML = "";
+      Object.entries(DATA).forEach(([key, theme]) => {
+        const button = document.createElement("button");
+        button.className = "theme" + (key === themeKey ? " active" : "");
+        button.textContent = theme.label;
+        button.addEventListener("click", () => {
+          themeKey = key;
+          renderThemes();
+          startCard();
+          button.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
         });
-        themeGrid.appendChild(btn);
+        themesEl.appendChild(button);
       });
     }
 
-    function startNewCard() {
-      const theme = themes[activeThemeKey];
-      const shuffledCategories = shuffle(theme.categories);
-      board = shuffledCategories.slice(0, 24).map(label => ({ label, marked: false }));
-      board.splice(12, 0, { label: "FREE", marked: true, free: true });
-      clueDeck = shuffle(theme.clues);
-      clueText.textContent = "Tap âNext Clueâ";
-      hintText.textContent = `${theme.label.replace(/^.\s/, "")} theme`;
-      message.textContent = "";
+    function startCard() {
+      const items = shuffle(DATA[themeKey].items);
+      board = items.slice(0, 24).map(([category]) => ({
+        category,
+        marked: false,
+        free: false
+      }));
+
+      board.splice(12, 0, {
+        category: "FREE",
+        marked: true,
+        free: true
+      });
+
+      deck = shuffle(items);
+      currentAnswer = null;
+      currentClue = null;
+      acceptingAnswer = false;
+      clueTextEl.textContent = "Tap Next Clue to begin";
+      feedbackEl.textContent = "Get five in a row to win.";
+      winEl.classList.remove("show");
       renderBoard();
     }
 
     function renderBoard() {
-      bingoCard.innerHTML = "";
-      board.forEach((cell, index) => {
-        const square = document.createElement("button");
-        square.className = "square" +
-          (cell.marked ? " marked" : "") +
-          (cell.free ? " free" : "");
-        square.textContent = cell.label;
-        square.setAttribute("aria-pressed", String(cell.marked));
-        square.addEventListener("click", () => {
-          if (cell.free) return;
-          board[index].marked = !board[index].marked;
-          renderBoard();
-          checkBingo();
-        });
-        bingoCard.appendChild(square);
+      boardEl.innerHTML = "";
+
+      board.forEach((item, index) => {
+        const button = document.createElement("button");
+        button.className =
+          "cell" +
+          (item.marked ? " marked" : "") +
+          (item.free ? " free" : "");
+        button.textContent = item.category;
+        button.dataset.index = index;
+
+        button.addEventListener("click", () => chooseCell(index, button));
+        boardEl.appendChild(button);
       });
     }
 
-    function nextClue() {
-      if (!clueDeck.length) {
-        clueDeck = shuffle(themes[activeThemeKey].clues);
+    function chooseCell(index, button) {
+      if (!acceptingAnswer || board[index].free || board[index].marked) {
+        return;
       }
-      const [clue, answer] = clueDeck.pop();
-      clueText.textContent = clue;
-      hintText.textContent = `Best match: ${answer}`;
-      message.textContent = "";
+
+      if (board[index].category === currentAnswer) {
+        board[index].marked = true;
+        acceptingAnswer = false;
+        button.classList.add("marked");
+        feedbackEl.textContent = "Correct. Tap Next Clue.";
+        checkWin();
+      } else {
+        button.classList.add("wrong");
+        feedbackEl.textContent = "Not that one. Try again.";
+        setTimeout(() => button.classList.remove("wrong"), 550);
+      }
     }
 
-    function checkBingo() {
+    function nextClue() {
+      if (!deck.length) {
+        deck = shuffle(DATA[themeKey].items);
+      }
+
+      let next = deck.pop();
+
+      // Prefer clues whose answer is actually on this card and not already marked.
+      for (let i = 0; i < 30; i++) {
+        const onBoard = board.some(
+          item => item.category === next[0] && !item.marked
+        );
+        if (onBoard) break;
+        deck.unshift(next);
+        next = deck.pop();
+      }
+
+      currentAnswer = next[0];
+      currentClue = next[1];
+      acceptingAnswer = true;
+      clueTextEl.textContent = currentClue;
+      feedbackEl.textContent = "Tap the best matching category.";
+    }
+
+    function checkWin() {
       const lines = [];
 
       for (let row = 0; row < 5; row++) {
@@ -455,17 +645,24 @@
         lines.push([0,1,2,3,4].map(row => row * 5 + col));
       }
 
-      lines.push([0,6,12,18,24], [4,8,12,16,20]);
+      lines.push([0,6,12,18,24]);
+      lines.push([4,8,12,16,20]);
 
-      const won = lines.some(line => line.every(index => board[index].marked));
-      message.textContent = won ? "ð BINGO! You got five in a row!" : "";
+      const hasWon = lines.some(line =>
+        line.every(index => board[index].marked)
+      );
+
+      if (hasWon) {
+        winEl.classList.add("show");
+      }
     }
 
-    nextClueBtn.addEventListener("click", nextClue);
-    newCardBtn.addEventListener("click", startNewCard);
+    nextBtn.addEventListener("click", nextClue);
+    newBtn.addEventListener("click", startCard);
+    playAgainBtn.addEventListener("click", startCard);
 
-    renderThemeButtons();
-    startNewCard();
+    renderThemes();
+    startCard();
   </script>
 </body>
 </html>
